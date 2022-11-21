@@ -28,9 +28,9 @@ experiments/
     - exporter_main_v2.py - to create an inference model
     - model_main_tf2.py - to launch training
     - reference/ - reference training with the unchanged config file
-    - experiment0/ - used random_adjust brightness and random_crop_image to augment the data
-    - experiment1/ - tested the rmsprop optimizer and restored original random_crop_image
-    - experiment2/ - added the random_adjust_contrast to augment the data
+    - experiment1/ - used random_adjust brightness and random_crop_image to augment the data
+    - experiment2/ - tested the rmsprop optimizer and restored original random_crop_image
+    - experiment3/ - added the random_adjust_contrast to augment the data
     - label_map.pbtxt
 ```
 
