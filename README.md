@@ -29,8 +29,8 @@ experiments/
     - model_main_tf2.py - to launch training
     - reference/ - reference training with the unchanged config file
     - experiment0/ - used random_adjust brightness and random_crop_image to augment the data
-    - experiment1/ - tested the rmsprop optimizer
-    - experiment2/ - added the random_adjust_contract to augment the data
+    - experiment1/ - tested the rmsprop optimizer and restored original random_crop_image
+    - experiment2/ - added the random_adjust_contrast to augment the data
     - label_map.pbtxt
 ```
 
@@ -114,6 +114,7 @@ Results:
 
 EXPERIMENT 1
 In this first experiment to improve the data, two augmentations are added: random_adjust_brightness and random_crop_image (modified from the already existing one).
+The model performs slightly worse than the reference one. The images can be found in tensorboard_screenshots folder. Since the augmentations did not helped for improving the performances, in the next experiment we tried a different optimizer.
 
 
 EXPERIMENT 2
@@ -127,6 +128,13 @@ Next is an example of the predictions of the model:
 
 There is still a lot of improvement to be made.
 What we can see from the screenshots is that the model performs better than before. Moreover, the validation losses are still higher than the training ones, but the difference is equal or lower than the reference case. Therefore, the overfitting has been reduced. The main reason behind the low performance can be mainly due to the reduced dataset (only 80 images for the training) that can cause the overfitting.
+
+EXPERIMENT 3
+Finally in this experiment, we tried to improve more by adding the random_adjust_contrast as augmentation. We thought it could be useful to increase the borders of the single objects, hopefully helping the network detecting features.
+However, the performance is worse than exp 2. Moreover, we ran it for 3.5k steps to see if more time could be beneficial.
+
+FINAL CONSIDERATIONS
+The experiments have been carried out for just 2.5k steps. The plots shows that the plateaux has not been reached yet. This limitation is mainly due to limited resources on my local desktop. Moreover, a quicker test resulted in more tests. The ones reported in this readme and loaded on the repository are the most significant ones.
 
 ### Creating an animation
 #### Export the trained model
