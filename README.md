@@ -100,7 +100,7 @@ The following plots are taken from tensorboard:
 ![Tensorboard_screenshots img](/tensorboard_screenshots/reference_loss.png "Reference loss")
 ![Tensorboard_screenshots img](/tensorboard_screenshots/reference_performance.png "Reference performance")
 
-The images shows that, even if the classification loss is low, the total loss is very high. This is reflected on the precision that is equal to 0. The model finds difficult to localize the majority of the objects.
+The images shows that, even if the classification loss is low, the total loss is very high. This is reflected on the precision that is equal to 0. The model finds difficult to localize the majority of the objects. Moreover, the validation losses are higher than the training ones. Therefore, there seems to be a little of overfitting to the training data.
 
 ### Improve the performances
 
@@ -119,13 +119,14 @@ In this first experiment to improve the data, two augmentations are added: rando
 EXPERIMENT 2
 In this experiment, the optimizer is changed to try to improve the overall performance. By using the RMSProp Optimizer (https://github.com/tensorflow/models/blob/master/research/object_detection/protos/optimizer.proto), we were able to improve the performance, as shown in the following screenshots:
 
-![Tensorboard_screenshots img](/tensorboard_screenshots/exp2_.png "Exp2 loss")
+![Tensorboard_screenshots img](/tensorboard_screenshots/exp2_loss.png "Exp2 loss")
 ![Tensorboard_screenshots img](/tensorboard_screenshots/exp2_performance.png "Exp2 performance")
 
 Next is an example of the predictions of the model:
-![Tensorboard_screenshots img](/tensorboard_screenshots/reference_loss.png "Exp2 prediction example")
+![Tensorboard_screenshots img](/tensorboard_screenshots/exp2_esPred.png "Exp2 prediction example")
 
 There is still a lot of improvement to be made. The main reason behind the low performance can be mainly due to the reduced dataset (only 80 images for the training).
+What we can see from the screenshots is that the model performs better than before. Moreover, the validation losses are still higher than the training one, but the difference is lower than the reference case. Therefore, the overfitting has been reduced.
 
 ### Creating an animation
 #### Export the trained model
