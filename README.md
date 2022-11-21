@@ -125,8 +125,8 @@ In this experiment, the optimizer is changed to try to improve the overall perfo
 Next is an example of the predictions of the model:
 ![Tensorboard_screenshots img](/tensorboard_screenshots/exp2_esPred.png "Exp2 prediction example")
 
-There is still a lot of improvement to be made. The main reason behind the low performance can be mainly due to the reduced dataset (only 80 images for the training).
-What we can see from the screenshots is that the model performs better than before. Moreover, the validation losses are still higher than the training one, but the difference is lower than the reference case. Therefore, the overfitting has been reduced.
+There is still a lot of improvement to be made.
+What we can see from the screenshots is that the model performs better than before. Moreover, the validation losses are still higher than the training ones, but the difference is equal or lower than the reference case. Therefore, the overfitting has been reduced. The main reason behind the low performance can be mainly due to the reduced dataset (only 80 images for the training) that can cause the overfitting.
 
 ### Creating an animation
 #### Export the trained model
