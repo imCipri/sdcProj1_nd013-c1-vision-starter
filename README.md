@@ -1,4 +1,6 @@
 # Object Detection in an Urban Environment
+In this project, a CNN is created to detect and classify objects from the Waymo dataset.
+The dataset is constituted of images of urban environments, where three different labels are assigned: vehicles (1), pedestrians (2), and cyclists (4).
 
 ## Data
 
@@ -12,30 +14,24 @@ For this project, we will be using data from the [Waymo Open dataset](https://wa
 
 The data you will use for training, validation and testing is organized as follow:
 ```
-/home/workspace/data/waymo
-    - training_and_validation - contains 97 files to train and validate your models
-    - train: contain the train data (empty to start)
-    - val: contain the val data (empty to start)
-    - test - contains 3 files to test your model and create inference videos
+/home/workspace/data/
+    - train: contain the train data (80 files)
+    - val: contain the val data (10 files)
+    - test - contains 10 files to test the model and create inference videos
 ```
 
-The `training_and_validation` folder contains file that have been downsampled: we have selected one every 10 frames from 10 fps videos. The `testing` folder contains frames from the 10 fps video without downsampling.
-
-You will split this `training_and_validation` data into `train`, and `val` sets by completing and executing the `create_splits.py` file.
-
 ### Experiments
-The experiments folder will be organized as follow:
+The experiments folder is organized as follow:
 ```
 experiments/
     - pretrained_model/
     - exporter_main_v2.py - to create an inference model
     - model_main_tf2.py - to launch training
     - reference/ - reference training with the unchanged config file
-    - experiment0/ - create a new folder for each experiment you run
-    - experiment1/ - create a new folder for each experiment you run
-    - experiment2/ - create a new folder for each experiment you run
+    - experiment0/ - tested a constant learning rate and used random_adjust brightness to augment the data
+    - experiment1/ - tested the rmsprop optimizer
+    - experiment2/ - added the random_adjust_contract to augment the data
     - label_map.pbtxt
-    ...
 ```
 
 ## Prerequisites
@@ -46,41 +42,28 @@ For local setup if you have your own Nvidia GPU, you can use the provided Docker
 
 Follow [the README therein](./build/README.md) to create a docker container and install all prerequisites.
 
-### Download and process the data
-
-**Note:** ”If you are using the classroom workspace, we have already completed the steps in the section for you. You can find the downloaded and processed files within the `/home/workspace/data/preprocessed_data/` directory. Check this out then proceed to the **Exploratory Data Analysis** part.
-
-The first goal of this project is to download the data from the Waymo's Google Cloud bucket to your local machine. For this project, we only need a subset of the data provided (for example, we do not need to use the Lidar data). Therefore, we are going to download and trim immediately each file. In `download_process.py`, you can view the `create_tf_example` function, which will perform this processing. This function takes the components of a Waymo Tf record and saves them in the Tf Object Detection api format. An example of such function is described [here](https://tensorflow-object-detection-api-tutorial.readthedocs.io/en/latest/training.html#create-tensorflow-records). We are already providing the `label_map.pbtxt` file.
-
-You can run the script using the following command:
-```
-python download_process.py --data_dir {processed_file_location} --size {number of files you want to download}
-```
-
-You are downloading 100 files (unless you changed the `size` parameter) so be patient! Once the script is done, you can look inside your `data_dir` folder to see if the files have been downloaded and processed correctly.
-
-### Classroom Workspace
-
-In the classroom workspace, every library and package should already be installed in your environment. You will NOT need to make use of `gcloud` to download the images.
-
 ## Instructions
 
 ### Exploratory Data Analysis
 
-You should use the data already present in `/home/workspace/data/waymo` directory to explore the dataset! This is the most important task of any machine learning project. To do so, open the `Exploratory Data Analysis` notebook. In this notebook, your first task will be to implement a `display_instances` function to display images and annotations using `matplotlib`. This should be very similar to the function you created during the course. Once you are done, feel free to spend more time exploring the data and report your findings. Report anything relevant about the dataset in the writeup.
+You should use the data already present in `/home/workspace/data/` directory to explore the dataset! This is the most important task of any machine learning project. 
+To do so, open the `Exploratory Data Analysis` notebook. 
+In this notebook, the `display_instances` function display batches of 10 images and annotations using `matplotlib`.
 
-Keep in mind that you should refer to this analysis to create the different spits (training, testing and validation).
+Results:
+- The most common factor in the major part of the images is the presence of occlusions. This can be present in the following forms:
+	a. weather (rain, fog)
+	b. light reflexes
+	c. other objects. It is indeed common to see traffic scenes, with a lot of cars overimposed, and a lot of pedestrians going together.
+- The photos are taken both during day and night. In some cases, we can find very dark scenes, where the only source of light comes from the car.
+- In proportion, there are a lot of cars with respect to the pedestrians and the cyclists. The cyclists are very rare.
+- There are images without objects.
+- Some images present labels for objects that are very small due to the distance from the camera.
 
+Following this analysis, it is possible to make the following assumptions regarding data augmentations:
+- The use of patches to increase occlusion would not be beneficial due to the presence of small or almost-hidden objects. Moreover, there are a lot of cases with occlusions.
+- The only useful augmentation I can think of is the adjustment of the brightness to cover the presence of very dark images.
 
-### Create the training - validation splits
-In the class, we talked about cross-validation and the importance of creating meaningful training and validation splits. For this project, you will have to create your own training and validation sets using the files located in `/home/workspace/data/waymo`. The `split` function in the `create_splits.py` file does the following:
-* create three subfolders: `/home/workspace/data/train/`, `/home/workspace/data/val/`, and `/home/workspace/data/test/`
-* split the tf records files between these three folders by symbolically linking the files from `/home/workspace/data/waymo/` to `/home/workspace/data/train/`, `/home/workspace/data/val/`, and `/home/workspace/data/test/`
-
-Use the following command to run the script once your function is implemented:
-```
-python create_splits.py --data-dir /home/workspace/data
-```
 
 ### Edit the config file
 
@@ -110,7 +93,9 @@ python experiments/model_main_tf2.py --model_dir=experiments/reference/ --pipeli
 **Note**: Both processes will display some Tensorflow warnings, which can be ignored. You may have to kill the evaluation script manually using
 `CTRL+C`.
 
-To monitor the training, you can launch a tensorboard instance by running `python -m tensorboard.main --logdir experiments/reference/`. You will report your findings in the writeup.
+To monitor the training, you can launch a tensorboard instance by running `python -m tensorboard.main --logdir experiments/reference/` on a new terminal.
+
+
 
 ### Improve the performances
 
