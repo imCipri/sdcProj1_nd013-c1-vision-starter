@@ -95,7 +95,7 @@ python experiments/model_main_tf2.py --model_dir=experiments/reference/ --pipeli
 
 To monitor the training, you can launch a tensorboard instance by running `python -m tensorboard.main --logdir experiments/reference/` on a new terminal.
 
-![Alt text]("https://github.com/imCipri/sdcProj1_nd013-c1-vision-starter/blob/04911619cd306518221b07591f314081c18611f0/tensorboard_screenshots/reference_loss.png","Reference loss")
+![Tensorboard_screenshots img](/tensorboard_screenshots/reference_loss.png "Reference loss")
 
 ### Improve the performances
 
